@@ -1,0 +1,74 @@
+<html>
+<style type='text/css'>
+	.embeddedServiceHelpButton .helpButton .uiButton {
+		background-color: #5E3D94;
+		font-family: "Arial", sans-serif;
+	}
+
+	.embeddedServiceHelpButton .helpButton .uiButton:focus {
+		outline: 1px solid #5E3D94;
+	}
+</style>
+
+	<script type='text/javascript' src='https://service.force.com/embeddedservice/5.0/esw.min.js'></script>
+	<script type='text/javascript'>
+		var initESW = function (gslbBaseURL) {
+			embedded_svc.settings.displayHelpButton = true;
+			embedded_svc.settings.language = '';
+
+			embedded_svc.settings.enabledFeatures = ['LiveAgent'];
+			embedded_svc.settings.entryFeature = 'LiveAgent';
+
+			embedded_svc.addEventHandler("onAgentMessage", function (data) {
+				console.log("onAgentMessage event was fired.  liveAgentSessionKey was " + data.liveAgentSessionKey);
+				tocarNotificacao();
+			});
+
+			embedded_svc.init(
+				'https://hipersistema--newhipdev.sandbox.my.salesforce.com',
+				'https://hipersistema--newhipdev.sandbox.my.salesforce-sites.com/',
+				gslbBaseURL,
+				'00DHZ0000025OFK',
+				'Atendimento_Hiper',
+				{
+					baseLiveAgentContentURL: 'https://c.la2s-core1.sfdc-xwy4ub.salesforceliveagent.com/content',
+					deploymentId: '5723t0000005KkP',
+					buttonId: '5733t0000005Lpv',
+					baseLiveAgentURL: 'https://d.la2s-core1.sfdc-xwy4ub.salesforceliveagent.com/chat',
+					eswLiveAgentDevName: 'EmbeddedServiceLiveAgent_Parent04I04000000CaglEAC_1865f8c3629',
+					isOfflineSupportEnabled: false
+				}
+			);
+		};
+
+		
+		function tocarNotificacao() {
+			const notificacao = new Audio();
+			notificacao.src = 'src/notificacao.mp3';
+		
+			const notificaoPromise = notificacao.play();
+		
+			if (notificaoPromise !== undefined) {
+				notificaoPromise.then(() => {
+					console.log("SOLTA O SOM DJ");
+				}).catch(error => {
+					console.log(error);
+				});
+			}
+		}
+		
+
+
+		if (!window.embedded_svc) {
+			var s = document.createElement('script');
+			s.setAttribute('src', 'https://hipersistema--newhipdev.sandbox.my.salesforce.com/embeddedservice/5.0/esw.min.js');
+			s.onload = function () {
+				initESW(null);
+			};
+			document.body.appendChild(s);
+		} else {
+			initESW('https://service.force.com');
+		}
+	</script>
+
+</html>
